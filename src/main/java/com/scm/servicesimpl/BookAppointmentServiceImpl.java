@@ -1,5 +1,6 @@
 package com.scm.servicesimpl;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -31,6 +32,13 @@ import com.scm.requests.UpdateAppointmentStatusRequest;
 import com.scm.services.BookAppointmentService;
 import com.scm.services.PaymentService;
 import com.scm.services.UserService;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 
 @Service
@@ -95,6 +103,25 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 //	        throw new RuntimeException("Failed to send email to admin");
 //	    }
     
+	    
+	    Email from = new Email("sengoutam689@gmail.com");
+	    Email to = new Email("sengoutam689@gmail.com");
+	    String messageBody = buildAdminEmailMessage(savedAppointment);
+	    Content content = new Content("text/html", messageBody);
+	    String subject = "Cusomter Request for the appointment";
+	    Mail mail = new Mail(from, subject, to, content);
+	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+	    try {
+	    	Request request = new Request();	    
+	    	request.setMethod(Method.POST);
+	    	request.setEndpoint("mail/send");
+			request.setBody(mail.build());
+			Response response = sg.api(request);
+			System.out.println("Email sent to the admin with status : "+response.getStatusCode());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
 	    return savedAppointment;
 	}
 
