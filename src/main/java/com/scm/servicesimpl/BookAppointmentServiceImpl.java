@@ -32,7 +32,6 @@ import com.scm.services.BookAppointmentService;
 import com.scm.services.PaymentService;
 import com.scm.services.UserService;
 
-import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class BookAppointmentServiceImpl implements BookAppointmentService {
@@ -41,8 +40,6 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	private BookAppointmentRepository appointmentRepo;
 	@Autowired
 	private SaloonServiceRepository serviceRepo;
-	@Autowired
-	private JavaMailSender mailSender;
 	@Autowired
 	private PaymentService paymentService;
 	@Autowired
@@ -257,20 +254,20 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 		appointment.setConfirmationTime(LocalDateTime.now());
 		appointment.setRemainingAmount(appointment.getTotalAmount());
 		appointmentRepo.save(appointment);
-		try {
-			// Send email as HTML
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			helper.setTo(appointment.getUser().getEmail()); // send to customer's email
-			helper.setSubject("Appointment Update - " + appointment.getAppointmentStatus());
-			String emailBody = buildEmailMessage(appointment, request.getNewStatus());
-			helper.setText(emailBody, true); // true = HTML email
-
-			mailSender.send(mimeMessage);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Failed to send email");
-		}
+//		try {
+//			// Send email as HTML
+//			MimeMessage mimeMessage = mailSender.createMimeMessage();
+//			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//			helper.setTo(appointment.getUser().getEmail()); // send to customer's email
+//			helper.setSubject("Appointment Update - " + appointment.getAppointmentStatus());
+//			String emailBody = buildEmailMessage(appointment, request.getNewStatus());
+//			helper.setText(emailBody, true); // true = HTML email
+//
+//			mailSender.send(mimeMessage);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("Failed to send email");
+//		}
 
 		return "Appointment status updated and email sent.";
 	}

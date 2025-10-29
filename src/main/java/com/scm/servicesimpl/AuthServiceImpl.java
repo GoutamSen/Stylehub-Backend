@@ -1,5 +1,6 @@
 package com.scm.servicesimpl;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +21,13 @@ import com.scm.requests.LoginRequest;
 import com.scm.requests.SignupRequest;
 import com.scm.services.AuthService;
 import com.scm.util.JwtUtil;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -30,13 +38,14 @@ public class AuthServiceImpl implements AuthService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private JwtUtil jwtUtil;
-	private final JavaMailSender mailSender;
+	
+//	@Autowired
+//	private JavaMailSender mailSender;
+	
 
 	private final Map<String, String> otpStore = new HashMap<>();
 
-	public AuthServiceImpl(JavaMailSender javaMailSender) {
-		this.mailSender = javaMailSender;
-	}
+	
 
 	@Override
 	public String signup(SignupRequest request) throws Exception {
@@ -100,13 +109,31 @@ public class AuthServiceImpl implements AuthService {
 		String otp = String.valueOf(new Random().nextInt(900000) + 100000); // 6-digit
 		otpStore.put(email, otp);
 		// Send Email
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
-		message.setSubject("Your OTP Code");
-		message.setText("Your OTP is: " + otp + " (valid for 5 minutes)");
-
-		mailSender.send(message);
-
+//		SimpleMailMessage message = new SimpleMailMessage();
+//		message.setTo(email);
+//		message.setSubject("Your OTP Code");
+//		message.setText("Your OTP is: " + otp + " (valid for 5 minutes)");
+//		mailSender.send(message);
+		
+        Email from = new Email("sengoutam689@gmail.com");
+        Email to = new Email(email);
+        String messageBody = "Hello your OTP is : "+otp+"\n\n This OTP is valid for 5 Minutes.";
+        Content content = new Content("text/plan", messageBody);
+        String subject = "Your OTP for StyleHub Login";
+        Mail mail = new Mail(from,subject,to,content);
+        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+     
+        try {
+        	Request request = new Request();
+        	request.setMethod(Method.POST);
+        	request.setEndpoint("mail/send");
+			request.setBody(mail.build());
+			Response response = sg.api(request);
+			System.out.println("Email sent with stuats : "+response.getStatusCode());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
 		return otp;
 	}
 
