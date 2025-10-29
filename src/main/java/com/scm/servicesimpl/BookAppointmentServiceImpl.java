@@ -78,6 +78,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    appointment.setRemainingAmount(totalAmount);
 	    appointment.setServiceImages(serviceImages);
 	    BookAppointment savedAppointment = appointmentRepo.save(appointment);
+	    
 	    // --- Send Email to Admin after booking ---
 //	    try {
 //	        MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -96,7 +97,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 //	        e.printStackTrace();
 //	        throw new RuntimeException("Failed to send email to admin");
 //	    }
-//    
+    
 	    return savedAppointment;
 	}
 
