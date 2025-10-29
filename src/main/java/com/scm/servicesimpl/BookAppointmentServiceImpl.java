@@ -78,7 +78,6 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    appointment.setRemainingAmount(totalAmount);
 	    appointment.setServiceImages(serviceImages);
 	    BookAppointment savedAppointment = appointmentRepo.save(appointment);
-        System.out.println("complete book appointment : ");
 	    // --- Send Email to Admin after booking ---
 //	    try {
 //	        MimeMessage mimeMessage = mailSender.createMimeMessage();
