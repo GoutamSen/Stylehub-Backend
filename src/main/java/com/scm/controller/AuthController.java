@@ -90,7 +90,7 @@ public class AuthController {
 		String otp = authService.generateOtp(request.getEmail());
 
 		ApiResponse<String> response = ApiResponse.<String>builder().timestamp(LocalDateTime.now())
-				.status(HttpStatus.OK.value()).message("OTP sent successfully!").data(otp) // or null if you don’t want
+				.status(HttpStatus.OK.value()).message("OTP sent successfully to !"+request.getEmail()).data(otp) // or null if you don’t want
 																							// to expose OTP in response
 				.build();
 

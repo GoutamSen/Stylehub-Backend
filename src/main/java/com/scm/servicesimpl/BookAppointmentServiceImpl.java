@@ -105,7 +105,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
     
 	    
 	    Email from = new Email(appointmentRequest.getEmail());
-	    Email to = new Email("sengoutam689@gmail.com");
+	    Email to = new Email("sengoutam689@gmail.com");   // admin email address
 	    String messageBody = buildAdminEmailMessage(savedAppointment);
 	    Content content = new Content("text/html", messageBody);
 	    String subject = "Cusomter Request for the appointment";
