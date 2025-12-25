@@ -138,8 +138,8 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    }
 
 	    // URLs for confirm/cancel (Option 1: backend GET endpoints)
-	    String confirmUrl = "https://api.stylehub.com/appointments/" + appointment.getId() + "/confirm";
-	    String cancelUrl  = "https://api.stylehub.com/appointments/" + appointment.getId() + "/cancel";
+	    String confirmUrl = "https://stylehub-1-degl.onrender.com/appointments/" + appointment.getId() + "/confirm";
+	    String cancelUrl  = "https://stylehub-1-degl.onrender.com/appointments/" + appointment.getId() + "/cancel";
 
 	    return "<p>Hello Admin,</p>"
 	            + "<p>A new appointment has been booked:</p>"
