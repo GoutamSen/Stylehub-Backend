@@ -310,7 +310,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	public String buildEmailMessage(BookAppointment appointment, AppointmentStatus newStatus) {
 		String customerName = appointment.getUser().getUsername();
 		String appointmentTime = appointment.getDate() + " at " + appointment.getTime();
-		String paymentLink = "http://localhost:4200/payment/";
+		String paymentLink = "https://stylehub-apps.netlify.app/payment";
 
 		switch (newStatus) {
 		case CONFIRMED:
