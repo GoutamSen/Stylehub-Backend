@@ -84,28 +84,9 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    appointment.setServiceImages(serviceImages);
 	    BookAppointment savedAppointment = appointmentRepo.save(appointment);
 	    
-	    // --- Send Email to Admin after booking ---
-//	    try {
-//	        MimeMessage mimeMessage = mailSender.createMimeMessage();
-//	        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//
-//	        // Send to admin’s email (configure this in properties or keep a constant)
-//	        String adminEmail = "sengoutam689@gmail.com";  
-//	        helper.setTo(adminEmail);
-//	        helper.setSubject("New Appointment Booked - StyleHub");
-//
-//	        String emailBody = buildAdminEmailMessage(savedAppointment);
-//	        helper.setText(emailBody, true);
-//
-//	        mailSender.send(mimeMessage);
-//	    } catch (Exception e) {
-//	        e.printStackTrace();
-//	        throw new RuntimeException("Failed to send email to admin");
-//	    }
-    
-	    
-	    Email from = new Email("sengoutam689@gmail.com");  
-	    Email to = new Email("sengoutam6890@gmail.com");   // admin email address
+	    // Email Configuration 
+	    Email from = new Email("sengoutam689@gmail.com");  // verified email
+	    Email to = new Email("sengoutam689@gmail.com");   // admin email address
 	    String messageBody = buildAdminEmailMessage(savedAppointment);
 	    Content content = new Content("text/html", messageBody);
 	    String subject = "Cusomter Request for the appointment";
@@ -284,8 +265,10 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    appointmentRepo.save(appointment);
 		System.out.println("saved appointment -> "+appointment);
 		
-		Email from = new Email("sengoutam689@gmail.com");  
-	    Email to = new Email("sengoutam6890@gmail.com");   // admin email address
+		// Email Configuration 
+		Email from = new Email("sengoutam689@gmail.com");   //verified email
+		String toEmail = appointment.getUser().getEmail();
+	    Email to = new Email(toEmail);   // customer email address
 	    String messageBody = buildEmailMessage(appointment,request.getNewStatus());
 	    Content content = new Content("text/html", messageBody);
 	    String subject = "Admin update the status of an appointment";
