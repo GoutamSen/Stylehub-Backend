@@ -268,6 +268,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 
 	@Override
 	public String updateAppointmentStatus(UpdateAppointmentStatusRequest request) {
+		System.out.println("start update appointment status method ");
 		BookAppointment appointment = appointmentRepo.findById(request.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("No appointment for this Id : " + request.getId()));
 
@@ -280,7 +281,8 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 		appointment.setPaymentStatus(PaymentStatus.UNPAID);
 		appointment.setConfirmationTime(LocalDateTime.now());
 		appointment.setRemainingAmount(appointment.getTotalAmount());
-		appointmentRepo.save(appointment);
+	    appointmentRepo.save(appointment);
+		System.out.println("saved appointment -> "+appointment);
 		
 		Email from = new Email("sengoutam689@gmail.com");  
 	    Email to = new Email("sengoutam6890@gmail.com");   // admin email address
@@ -290,6 +292,7 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 	    Mail mail = new Mail(from, subject, to, content);
 	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
 	    try {
+	    	System.out.println("enter into try block");
 	    	Request req = new Request();	    
 	    	req.setMethod(Method.POST);
 	    	req.setEndpoint("mail/send");
