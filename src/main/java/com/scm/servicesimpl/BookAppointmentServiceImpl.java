@@ -281,20 +281,24 @@ public class BookAppointmentServiceImpl implements BookAppointmentService {
 		appointment.setConfirmationTime(LocalDateTime.now());
 		appointment.setRemainingAmount(appointment.getTotalAmount());
 		appointmentRepo.save(appointment);
-//		try {
-//			// Send email as HTML
-//			MimeMessage mimeMessage = mailSender.createMimeMessage();
-//			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//			helper.setTo(appointment.getUser().getEmail()); // send to customer's email
-//			helper.setSubject("Appointment Update - " + appointment.getAppointmentStatus());
-//			String emailBody = buildEmailMessage(appointment, request.getNewStatus());
-//			helper.setText(emailBody, true); // true = HTML email
-//
-//			mailSender.send(mimeMessage);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("Failed to send email");
-//		}
+		
+		Email from = new Email("sengoutam689@gmail.com");  
+	    Email to = new Email("sengoutam6890@gmail.com");   // admin email address
+	    String messageBody = buildEmailMessage(appointment,request.getNewStatus());
+	    Content content = new Content("text/html", messageBody);
+	    String subject = "Admin update the status of an appointment";
+	    Mail mail = new Mail(from, subject, to, content);
+	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+	    try {
+	    	Request req = new Request();	    
+	    	req.setMethod(Method.POST);
+	    	req.setEndpoint("mail/send");
+	    	req.setBody(mail.build());
+			Response response = sg.api(req);
+			System.out.println("Email sent to the customer with status : "+response.getStatusCode());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return "Appointment status updated and email sent.";
 	}
